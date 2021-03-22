@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from 'src/app/models/product';
-import {HttpClient} from '@angular/common/http'
-import { ProductResponseModel } from 'src/app/models/productResponseModel';
+import { ProductService } from 'src/app/service/product.service';
+import { ProductResponseModel } from '../../models/productResponseModel';
 
 
 @Component({
@@ -10,11 +10,9 @@ import { ProductResponseModel } from 'src/app/models/productResponseModel';
   styleUrls: ['./product.component.css'],
 })
 export class ProductComponent implements OnInit {
-
   products:Product[] = [];
-  apiUrl="https://localhost:44331/api/Products/getall";
-
-  constructor(private httpClient:HttpClient) { {
+  dataLoaded=false;
+  constructor(private productService:ProductService) { {
     
   }}
 
@@ -24,9 +22,10 @@ export class ProductComponent implements OnInit {
 
   }
   getProducts() {
-    this.httpClient.get<ProductResponseModel>(this.apiUrl).subscribe((response)=> {
-      this.products=response.data;
-    });
+    this.productService.getProducts().subscribe(response=>{
+      this.products=response.data
+      this.dataLoaded=true;
+    })
 
   }
 
